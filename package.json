@@ -1,0 +1,19 @@
+{
+  "name": "gwent-chess",
+  "version": "0.0.1",
+  "description": "game",
+  "main": "app.js",
+  "scripts": {
+    "dev": "node bin/www.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhou-yg/gwent-chess.git"
+  },
+  "author": "",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/zhou-yg/gwent-chess/issues"
+  },
+  "homepage": "https://github.com/zhou-yg/gwent-chess#readme"
+}

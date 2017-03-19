@@ -1,0 +1,82 @@
+#phone{
+  margin:0;
+  border:1px solid;
+  padding: 0;
+  width: 320px;
+  height: 540px;
+
+  position: relative;
+}
+
+#board{
+
+  border-bottom:1px solid;
+
+  .grid-box{
+    display: flex;
+  }
+
+  .grid{
+    background-color: #f0f0f0;
+    border:1px solid #fff;
+    margin-right:-1px;
+    margin-bottom:-1px;
+    height: 40px;
+    flex:1;
+
+    &:last-child{
+      margin-right:0;
+    }
+    &.move{
+      background-color: green;
+    }
+    .chess{
+      height:100%;
+      &.horse{
+        background-color: #80651A;
+      }
+      &.rook{
+        background-color: #71801E;
+      }
+      &.enemy{
+        background-color: red;
+      }
+    }
+  }
+}
+
+#userList{
+  margin:0;
+  padding: 5px;
+  overflow: hidden;
+
+  li{
+    margin:0;
+    padding: 0;
+    text-align: center;
+    border:1px solid;
+    width: 40px;
+    height: 2em;
+    line-height:2em;
+    float: left;
+    list-style:none;
+  }
+}
+
+#log{
+  margin:5px;
+  border:1px solid;
+  padding:3px 10px;
+  .log-one{
+    margin:0;
+    border-bottom:1px dashed #999;
+    line-height:1.5em;
+
+    &:last-child{
+      border: none;
+    }
+  }
+}
+#current{
+  padding:0 5px;
+}
