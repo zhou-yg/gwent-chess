@@ -1,2 +1,3 @@
-# Gwent.js
+# Gwent-chess
 ----
+战棋
