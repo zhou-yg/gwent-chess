@@ -1,10 +1,10 @@
 require('./assets/style.less');
 
-import createStore from 'store/store'
-import types from 'store/types'
-import { INIT_CODE } from 'store/reducers/chess'
-import gwentTypes from '../../src/lib/types'
-import watcher from '../../src/lib/watcher'
+import createStore from './store/store'
+import types from './store/types'
+import { INIT_CODE } from './store/reducers/chess'
+import gwentTypes from 'gwent.js/src/lib/types'
+import watcher from 'gwent.js/src/lib/watcher'
 
 const socket = io();
 

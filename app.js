@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const babel = require('babel-core');
 const webpack = require('webpack');
-const Gwent = require('../../');
+const Gwent = require('gwent.js');
 
 const MemoryFS = require('memory-fs');
 const mfs = new MemoryFS();
@@ -93,7 +93,7 @@ const app = Gwent({
 const webpackConfig = {
 
   entry: {
-    client: path.join(__dirname, 'index.js'),
+    client: path.join(__dirname, './web/index.js'),
   },
   output: {
     path: __dirname,
@@ -159,7 +159,7 @@ app.use(function *(next) {
 
 app.use(function *() {
   this.response.set('Content-type', 'text/html');
-  this.body = fs.createReadStream('./index.html');
+  this.body = fs.createReadStream('./web/index.html');
 });
 
 app.io.route('new user', function *() {
@@ -220,6 +220,4 @@ app.io.route('match user',function * (next,username){
   }
 });
 
-app.listen(9999, ()=> {
-  console.log('listen on 9999');
-});
+module.exports = app;
