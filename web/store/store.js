@@ -10,7 +10,6 @@ const enemy = require('./reducers/enemy');
 const player = require('./reducers/player');
 const selectChess = require('./reducers/selectChess');
 
-
 const middlewares = require('gwent.js/middlewares');
 
 module.exports = function createMyStore(socket,options) {

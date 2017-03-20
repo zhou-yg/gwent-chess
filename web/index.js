@@ -6,6 +6,9 @@ import { INIT_CODE } from './store/reducers/chess'
 import gwentTypes from 'gwent.js/src/lib/types'
 import watcher from 'gwent.js/src/lib/watcher'
 
+import Horse from './models/chess/Horse';
+import Rook from './models/chess/Rook';
+
 const socket = io();
 
 socket.on('log',function (a){
@@ -87,28 +90,6 @@ class UserList {
     this.container.appendChild(frag);
   }
 }
-
-
-class Horse {
-
-  constructor(x,y){
-    this.name = 'Horse';
-    this.type = 'Chess';
-    this.x = x;
-    this.y = y;
-
-  }
-}
-class Rook {
-  constructor(x,y){
-    this.name = 'Rook';
-    this.type = 'Chess';
-    this.x = x;
-    this.y = y;
-  }
-}
-
-
 
 class ChessBoard {
 
@@ -265,14 +246,25 @@ watcher(store,{
   },
 });
 
+console.log(new Horse({
+  x:3,
+  y:7,
+}))
+
 store.dispatch({
   type:types.CHESS_ADD,
   from:gwentTypes.BROWSER_TAG,
-  chess:new Horse(3,7),
+  chess:new Horse({
+    x:3,
+    y:7,
+  }),
 });
 
 store.dispatch({
   type:types.CHESS_ADD,
   from:gwentTypes.BROWSER_TAG,
-  chess:new Rook(2,7),
+  chess:new Rook({
+    x:2,
+    y:7,
+  }),
 });

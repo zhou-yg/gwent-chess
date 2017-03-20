@@ -48,8 +48,8 @@ const reducer = {
 
     var selectChess = a.selectChess;
 
-    var checkMoveFn = fnMap[selectChess.name];
-    
+    var checkMoveFn = fnMap[selectChess.chessType];
+
     var arr = state.map((row,y)=>{
       return row.map((code,x)=>{
         if(checkMoveFn(x,y,selectChess.x,selectChess.y) ){
@@ -78,7 +78,7 @@ const index = () => [
 
 
 function createReducer() {
-  
+
   const structReducer = struct(reducer, index());
 
   return function(state,a){
