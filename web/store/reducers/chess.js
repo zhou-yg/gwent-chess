@@ -32,6 +32,15 @@ const fnMap = {
 }
 
 
+function transformAction (action){
+  if((action.x || action.x ===0) && (action.y || action.y === 0)){
+    action.x = WIDTH - action.x;
+    action.y = HEIGHT - action.y;
+  }
+  return action
+}
+
+
 const reducer = {
   [types.CHESS_MOVE](state, a){
     if(a.isSelf) {
@@ -76,6 +85,8 @@ const index = () => [
   [INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE],
 ];
 
+const HEIGHT = index().length - 1;
+const WIDTH = index()[0].length - 1;
 
 function createReducer() {
 
@@ -89,8 +100,9 @@ function createReducer() {
 };
 
 createReducer.INIT_CODE = INIT_CODE;
-createReducer.HEIGHT = index().length;
-createReducer.WIDTH = index()[0].length;
+createReducer.HEIGHT = HEIGHT;
+createReducer.WIDTH = WIDTH;
 createReducer.struct = struct;
+createReducer.transformAction = transformAction;
 
 module.exports = createReducer;

@@ -197,23 +197,31 @@ app.io.route('match user',function * (next,username){
 
     console.log('findPlayer:',findPlayer);
 
-    findPlayer.store.socketDispatch({
-      type:types.FIND_PLAYER,
-      isSelf:true,
-      player:this.store.getState().player,
-    });
+    var battleManager;
+    try{
+
+      findPlayer.store.socketDispatch({
+        type:types.FIND_PLAYER,
+        isSelf:true,
+        player:this.store.getState().player,
+      });
 
 
-    this.store.socketDispatch({
-      type:types.FIND_PLAYER,
-      isSelf:true,
-      player:findPlayer.store.getState().player,
-    });
+      this.store.socketDispatch({
+        type:types.FIND_PLAYER,
+        isSelf:true,
+        player:findPlayer.store.getState().player,
+      });
 
-    const battleManager = new BattleManager(this.userData,findPlayer);
+      battleManager = new BattleManager(this.userData,findPlayer);
 
-    this.userData.battlerManager = batterManager;
-    findPlayer.battlerManager = batterManager;
+      this.userData.battlerManager = battleManager;
+      findPlayer.battlerManager = battleManager;
+
+    }catch(e){
+      console.log('end e', e);
+    }
+
 
   }else{
     this.emit('log','同名')

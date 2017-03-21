@@ -5,6 +5,7 @@ const INIT_CODE = require('./chess').INIT_CODE;
 const WIDTH = require('./chess').WIDTH - 1;
 const HEIGHT = require('./chess').HEIGHT - 1;
 const struct = require('./chess').struct;
+const transformAction = require('./chess').transformAction;
 
 const reducer = {
   [types.CHESS_ADD](state,a){
@@ -25,7 +26,17 @@ const reducer = {
       return state.slice();
     }
     return state;
-  }
+  },
+  [types.KILL_CHESS](state, a){
+    if(!a.isSelf){
+      const who = transformAction(a.who);
+      return state.filter((item,i) => {
+        console.log('我的',i,':',item,who);
+        return !(item.x === who.x && item.y === who.y);
+      });
+    }
+    return state;
+  },
 };
 
 

@@ -7,6 +7,7 @@ const types = require('../types');
 const INIT_CODE = require('./chess').INIT_CODE;
 const WIDTH = require('./chess').WIDTH - 1;
 const HEIGHT = require('./chess').HEIGHT - 1;
+const transformAction = require('./chess').transformAction;
 
 function struct(handler,defaultState) {
 
@@ -42,14 +43,6 @@ function transformToPlayer (arr) {
   return result;
 }
 
-function transformAction (action){
-  if((action.x || action.x ===0) && (action.y || action.y === 0)){
-    action.x = WIDTH - action.x;
-    action.y = HEIGHT - action.y;
-  }
-  return action
-}
-
 const reducer = {
   [types.CHESS_ADD](state, a){
 
@@ -80,7 +73,17 @@ const reducer = {
       return state.slice();
     }
     return state;
-  }
+  },
+  [types.KILL_CHESS](state, a){
+    if(a.isSelf){
+      const who = a.who;
+      return state.filter((item, i) => {
+        console.log('敌人的',i,':',item,who);
+        return !(item.x === who.x && item.y === who.y);
+      });
+    }
+    return state;
+  },
 }
 
 module.exports = struct(reducer,[]);

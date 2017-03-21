@@ -16,4 +16,6 @@ module.exports = {
   SELECT_CHESS:'选择棋子',
 
   CLEAR_CHESS:'清除选择',
+
+  KILL_CHESS: '消灭对手',
 };

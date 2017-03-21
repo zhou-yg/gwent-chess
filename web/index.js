@@ -42,7 +42,7 @@ const logObj = {
     this.data.list.map((str,i)=>{
       var p = document.createElement('p')
       p.className = 'log-one';
-      p.innerText = (this.data.i + i)+'.'+str;
+      p.innerText = (this.data.i - i)+'.'+str;
       frag.appendChild(p);
     });
     this.$el.innerHTML = '';
@@ -123,16 +123,42 @@ class ChessBoard {
 
         if(v && v.type === 'move'){
           grid.className += ' move';
+
           grid.onclick = () => {
-            store.dispatch({
-              type:types.CHESS_MOVE,
-              from:gwentTypes.BROWSER_TAG,
-              selectChess:this.selectChess,
-              to:{
-                y:i,
-                x:j,
+
+            if (this.selectChess.x === j && this.selectChess.y === i){
+              logObj.log('原地移动');
+            }else{
+
+              const { enemy } = store.getState();
+
+              const targetEnemy = enemy.filter((item) => {
+                return item.x === j && item.y === i;
+              });
+
+              if(targetEnemy.length > 0){
+
+                logObj.log(`消灭对手${i},${j}`)
+
+                store.dispatch({
+                  type:types.KILL_CHESS,
+                  from:gwentTypes.BROWSER_TAG,
+                  who:{
+                    y:i,
+                    x:j,
+                  }
+                });
               }
-            });
+              store.dispatch({
+                type:types.CHESS_MOVE,
+                from:gwentTypes.BROWSER_TAG,
+                selectChess:this.selectChess,
+                to:{
+                  y:i,
+                  x:j,
+                }
+              });
+            }
           }
         }
 
@@ -172,7 +198,7 @@ class ChessBoard {
 
       chess.onclick = ()=>{
         this.selectChess = {
-          name:obj.name,
+          chessType: obj.chessType,
           x,
           y,
           index:i,
@@ -197,10 +223,10 @@ class Current {
   constructor(){
     this.$el= document.querySelector('#current');
   }
-  show({name,x,y}){
+  show({chessType,x,y}){
     this.$el.innerHTML = '';
 
-    var text = `当前选择:${name},${x}-${y}`;
+    var text = `当前选择:${chessType},${x}-${y}`;
 
     this.$el.innerText = text;
   }
@@ -246,18 +272,13 @@ watcher(store,{
   },
 });
 
-console.log(new Horse({
-  x:3,
-  y:7,
-}))
-
 store.dispatch({
   type:types.CHESS_ADD,
   from:gwentTypes.BROWSER_TAG,
   chess:new Horse({
     x:3,
-    y:7,
-  }),
+    y:4,
+  }).graphicsData(),
 });
 
 store.dispatch({
@@ -265,6 +286,6 @@ store.dispatch({
   from:gwentTypes.BROWSER_TAG,
   chess:new Rook({
     x:2,
-    y:7,
-  }),
+    y:4,
+  }).graphicsData(),
 });
