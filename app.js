@@ -213,6 +213,15 @@ app.io.route('match user',function * (next,username){
         player:findPlayer.store.getState().player,
       });
 
+      this.store.socketDispatch({
+        type:types.START_TURN,
+        to: true,
+      });
+      findPlayer.store.socketDispatch({
+        type:types.START_TURN,
+        to: false,
+      });
+
       battleManager = new BattleManager(this.userData,findPlayer);
 
       this.userData.battlerManager = battleManager;

@@ -9,6 +9,7 @@ const chess = require('./reducers/chess');
 const enemy = require('./reducers/enemy');
 const player = require('./reducers/player');
 const selectChess = require('./reducers/selectChess');
+const turnState = require('./reducers/turnState');
 
 const middlewares = require('gwent.js/middlewares');
 
@@ -21,25 +22,24 @@ module.exports = function createMyStore(socket,options) {
   const browser = options.browser;
 
   var enhancer;
+
+  var myMiddlewares = [
+    reduxAssign(true),
+    middlewares.actionRedirect(socket),
+  ];
+
   if(browser){
-    enhancer = applyMiddleware(
-      reduxAssign(true),
-      middlewares.receiveSocket(socket),
-      middlewares.actionRedirect(socket)
-    );
-  }else{
-    enhancer = applyMiddleware(
-      reduxAssign(true),
-      middlewares.actionRedirect(socket)
-    );
+    myMiddlewares.splice(1,0,middlewares.receiveSocket(socket))
   }
+
+  enhancer = applyMiddleware(...myMiddlewares);
 
   const store = createStore(combineReducers({
     boardIndex:chess(),
     player,
     selectChess,
     enemy,
-
+    turnState,
   }),enhancer);
 
 

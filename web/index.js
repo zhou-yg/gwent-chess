@@ -94,6 +94,7 @@ class UserList {
 class ChessBoard {
 
   constructor(){
+    this.isMyTurn = true; //是否我的回合
     this.index = [];
     this.player = [];
     this.enemy = [];
@@ -158,6 +159,11 @@ class ChessBoard {
                   x:j,
                 }
               });
+
+              store.dispatch({
+                type:types.CHANGE_TURN,
+                from:gwentTypes.BROWSER_TAG,
+              });
             }
           }
         }
@@ -197,6 +203,11 @@ class ChessBoard {
       const chess = addObj(obj);
 
       chess.onclick = ()=>{
+        if(!this.isMyTurn){
+          logObj.log('不是你的回合');
+          return;
+        }
+
         this.selectChess = {
           chessType: obj.chessType,
           x,
@@ -270,6 +281,15 @@ watcher(store,{
     rerender(state.boardIndex);
     rerenderChess(state.player,value);
   },
+  turnState(value){
+    if(value){
+      logObj.log(`现在是你的回合`);
+    }else{
+      logObj.log('到别人啦');
+    }
+
+    chessBoard.isMyTurn = value;
+  }
 });
 
 store.dispatch({

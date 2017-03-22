@@ -18,4 +18,7 @@ module.exports = {
   CLEAR_CHESS:'清除选择',
 
   KILL_CHESS: '消灭对手',
+
+  START_TURN: '开启回合状态',
+  CHANGE_TURN: '转换回合',
 };
