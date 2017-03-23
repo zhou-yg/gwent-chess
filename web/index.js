@@ -94,7 +94,7 @@ class UserList {
 class ChessBoard {
 
   constructor(){
-    this.isMyTurn = true; //是否我的回合
+    this.isMyTurn = -1; //是否我的回合
     this.index = [];
     this.player = [];
     this.enemy = [];
@@ -160,10 +160,13 @@ class ChessBoard {
                 }
               });
 
-              store.dispatch({
-                type:types.CHANGE_TURN,
-                from:gwentTypes.BROWSER_TAG,
-              });
+              if(this.isMyTurn !== -1){
+                debugger;
+                store.dispatch({
+                  type:types.CHANGE_TURN,
+                  from:gwentTypes.BROWSER_TAG,
+                });
+              }
             }
           }
         }

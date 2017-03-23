@@ -17,6 +17,9 @@ const reducer = {
     // if(obj.isSelf){
     //   return !state;
     // }
+    if(state === -1){
+      return state;
+    }
     return !state;
   }
 };
