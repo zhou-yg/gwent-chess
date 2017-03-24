@@ -106,6 +106,20 @@ class ChessBoard {
     const frag = document.createDocumentFragment();
 
 
+    console.log(this.player.length);
+    const isFog = (x0,y0) => {
+      const r = this.player.every(obj => {
+        const {x,y} = obj;
+        const dx = Math.abs(x-x0);
+        const dy = Math.abs(y-y0);
+        const r0 = dx > 2 || dy > 2 || (dx === dy && dy === 2);
+
+        return r0;
+      });
+      //console.log(r,x0,y0);
+      return r;
+    }
+
     //渲染地形
     this.index.forEach((row,i)=>{
 
@@ -121,8 +135,11 @@ class ChessBoard {
 
         div.appendChild(grid);
 
+        if(isFog(j, i)){
 
-        if(v && v.type === 'move'){
+          grid.classList.add('fog');
+
+        }else if(v && v.type === 'move'){
           grid.className += ' move';
 
           grid.onclick = () => {
@@ -183,7 +200,7 @@ class ChessBoard {
   }
   renderChess () {
 
-    var addObj = (obj) => {
+    var addObj = (obj, isEnemy) => {
       const x = obj.x;
       const y = obj.y;
 
@@ -191,12 +208,19 @@ class ChessBoard {
 
       grid.innerHTML = '';
 
-      const chess = document.createElement('div');
-      chess.className = 'chess ' + obj.camp;
+      if(isEnemy && grid.classList.contains('fog')){
 
-      grid.appendChild(chess);
+      }else{
+        const chess = document.createElement('div');
+        chess.classList.add('chess');
+        chess.classList.add(obj.chessType);
+        chess.classList.add(obj.camp);
+        chess.innerText = obj.chessType;
 
-      return chess;
+        grid.appendChild(chess);
+
+        return chess;
+      }
     };
 
     this.player.map((obj,i)=>{
@@ -228,7 +252,7 @@ class ChessBoard {
     });
 
     this.enemy.map(obj=>{
-      addObj(obj);
+      addObj(obj, true);
     });
   }
 }
@@ -252,37 +276,28 @@ const userList = new UserList(socket);
 
 const current = new Current();
 
-function rerender(index){
-
+function rerender(index,player,enemy){
+  chessBoard.player = player;
+  chessBoard.enemy = enemy;
   chessBoard.index = index;
 
   chessBoard.render();
-}
-
-function rerenderChess(player,enemy){
-  chessBoard.player = player;
-  chessBoard.enemy = enemy;
-
   chessBoard.renderChess();
 }
 
 var initState = store.getState();
 
-rerender(initState.boardIndex);
-rerenderChess(initState.player,initState.enemy);
+rerender(initState.boardIndex,initState.player,initState.enemy);
 
 watcher(store,{
   boardIndex(value,old,state){
-    rerender(value);
-    rerenderChess(state.player,state.enemy);
+    rerender(value,state.player,state.enemy);
   },
   player(value,old,state){
-    rerender(state.boardIndex);
-    rerenderChess(value,state.enemy);
+    rerender(state.boardIndex,value,state.enemy);
   },
   enemy(value,old,state){
-    rerender(state.boardIndex);
-    rerenderChess(state.player,value);
+    rerender(state.boardIndex, state.player, value);
   },
   turnState(value){
     if(value){
@@ -300,7 +315,7 @@ store.dispatch({
   from:gwentTypes.BROWSER_TAG,
   chess:new Horse({
     x:3,
-    y:4,
+    y:7,
   }).graphicsData(),
 });
 
@@ -309,6 +324,6 @@ store.dispatch({
   from:gwentTypes.BROWSER_TAG,
   chess:new Rook({
     x:2,
-    y:4,
+    y:7,
   }).graphicsData(),
 });

@@ -11,7 +11,6 @@ const reducer = {
   [types.CHESS_ADD](state,a){
     if(a.isSelf){
       const chess = a.chess;
-      chess.camp = (chess.chessType).toLowerCase();
       return state.concat(chess);
     }
     return state;
