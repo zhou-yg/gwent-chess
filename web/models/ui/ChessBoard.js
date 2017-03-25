@@ -11,7 +11,6 @@ class ChessBoard {
 
     var boardDOM = document.createElement('div');
     boardDOM.id = 'board';
-    document.body.appendChild(boardDOM);
 
     this.current = current;
     this.logObj = logObj
@@ -19,7 +18,7 @@ class ChessBoard {
     this.index = initState.index;
     this.player = initState.player;
     this.enemy = initState.enemy;
-    this.boardDOM = boardDOM;
+    this.el = boardDOM;
     this.store = store;
 
     const rerender = (index,player,enemy) => {
@@ -149,8 +148,8 @@ class ChessBoard {
       });
     });
 
-    this.boardDOM.innerHTML = '';
-    this.boardDOM.appendChild(frag);
+    this.el.innerHTML = '';
+    this.el.appendChild(frag);
 
     //渲染敌我
 
@@ -162,7 +161,7 @@ class ChessBoard {
       const x = obj.x;
       const y = obj.y;
 
-      const grid = this.boardDOM.children[y].children[x];
+      const grid = this.el.children[y].children[x];
 
       grid.innerHTML = '';
 

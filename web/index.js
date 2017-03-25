@@ -5,7 +5,9 @@ import types from './store/types'
 import { INIT_CODE } from './store/reducers/chess'
 import gwentTypes from 'gwent.js/src/lib/types'
 
+import Main from './models/ui/Main';
 import ChessBoard from './models/ui/ChessBoard';
+import UserList from './models/ui/UserList'
 import Horse from './models/chess/Horse';
 import Rook from './models/chess/Rook';
 
@@ -50,74 +52,31 @@ const logObj = {
   }
 };
 
-class UserList {
-
-  constructor(socket){
-
-    var div = document.createElement('div');
-    div.id = 'userList';
-    document.body.appendChild(div);
-
-    this.container = div;
-
-    this.socket = socket;
-    this.socket.on('users',(list)=>{
-
-      this.list = list.map(obj=>{
-
-        return {
-          username:obj.username,
-        }
-      });
-
-      this.render();
-    });
-  }
-
-  render(){
-
-    const frag = this.list.map(obj=>{
-      const li = document.createElement('li');
-      li.innerText = obj.username;
-      li.onclick = () => {
-
-        this.socket.emit('match user',obj.username);
-      };
-
-      return li;
-    }).reduce((frag,li)=>{
-      frag.appendChild(li);
-      return frag;
-    },document.createDocumentFragment());
-
-    this.container.innerHTML = '';
-    this.container.appendChild(frag);
-  }
-}
-
-
 class Current {
   constructor(){
     var div = document.createElement('div');
     div.id = 'current';
-    document.body.appendChild(div);
-    this.$el= div;
+    this.el= div;
   }
   show({chessType,x,y}){
-    this.$el.innerHTML = '';
+    this.el.innerHTML = '';
 
     var text = `当前选择:${chessType},${x}-${y}`;
 
-    this.$el.innerText = text;
+    this.el.innerText = text;
   }
 }
 
+const main = new Main();
 
 const userList = new UserList(socket);
 
 const current = new Current();
 
 const chessBoard = new ChessBoard(store, current, logObj);
+
+main.top.appendChild(chessBoard.el);
+main.bottom.appendChild(userList.el);
 
 store.dispatch({
   type:types.CHESS_ADD,

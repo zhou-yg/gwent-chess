@@ -33,4 +33,4 @@ class Chess {
 }
 
 
-export default Chess;
+module.exports = Chess;

@@ -1,7 +1,10 @@
 /**
  * Created by zyg on 17/3/2.
  */
+'use strict' 
 const types = require('../types');
+const Horse = require('../../models/chess/Horse');
+const Rook = require('../../models/chess/Rook');
 
 const INIT_CODE = 0;
 
@@ -22,13 +25,8 @@ function struct(handler, defaultState) {
 }
 
 const fnMap = {
-  Horse: function(x0,y0,x1,y1){
-
-    return (Math.abs(x0 - x1) === 1 && Math.abs(y0 - y1) === 2) || (Math.abs(x0 - x1) === 2 && Math.abs(y0 - y1) === 1);
-  },
-  Rook : function(x0,y0,x1,y1){
-    return (y0 === y1 && Math.abs(x0 - x1) <= 2) || (x0 === x1 && Math.abs(y0 - y1) <= 2);
-  }
+  Horse: Horse.checkMoveFn,
+  Rook : Rook.checkMoveFn,
 }
 
 

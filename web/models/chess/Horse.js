@@ -1,8 +1,13 @@
-import Chess from './Chess.js'
+'use strict';
+
+const Chess = require('./Chess.js');
 
 class Horse extends Chess{
 
-  constructor(config = {}){
+  constructor(config){
+    if(!config){
+      config = {};
+    }
     super(Object.assign(config,{
       chessType: 'Horse',
     }));
@@ -10,5 +15,9 @@ class Horse extends Chess{
 
 }
 
+Horse.checkMoveFn = function(x0,y0,x1,y1){
 
-export default Horse;
+  return (Math.abs(x0 - x1) === 1 && Math.abs(y0 - y1) === 2) || (Math.abs(x0 - x1) === 2 && Math.abs(y0 - y1) === 1);
+}
+
+module.exports = Horse;

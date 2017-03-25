@@ -1,11 +1,30 @@
 body{
+  margin: 0;
+  padding: 0;
+}
+
+.main {
   margin:0;
-  border:1px solid;
   padding: 0;
   width: 100vw;
   height: 100vh;
 
   position: relative;
+
+  .main__top{
+    background-color: #f0f0f0;
+    height: 49.5vh;
+  }
+  .main__hr{
+    box-sizing: border-box;
+    border: 1px dashed #333;
+    width: 100%;
+    height: 1vh
+  }
+  .main__bottom{
+    background-color: #f0f0f0;
+    height: 49.5vh;
+  }
 }
 
 #board{
@@ -17,11 +36,11 @@ body{
   }
 
   .grid{
-    background-color: #f0f0f0;
-    border:1px solid #fff;
+    background-color: #fff;
+    border:1px solid #000;
     margin-right:-1px;
     margin-bottom:-1px;
-    height: 40px;
+    height: 4vh;
     flex:1;
 
     &:last-child{
@@ -67,9 +86,15 @@ body{
 }
 
 #log{
-  margin:5px;
+  background-color: #fff;
+  box-sizing: border-box;
+  padding: 5px;
   border:1px solid;
-  padding:3px 10px;
+  width: 100%;
+  position: fixed;
+  bottom: 5px;
+  left:0;
+  z-index: 1;
   .log-one{
     margin:0;
     border-bottom:1px dashed #999;
