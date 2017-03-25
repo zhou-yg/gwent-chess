@@ -24,4 +24,4 @@ const reducer = {
   }
 };
 
-module.exports = struct(reducer, true);
+module.exports = struct(reducer, -1);

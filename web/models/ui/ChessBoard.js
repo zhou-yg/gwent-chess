@@ -35,11 +35,19 @@ class ChessBoard {
       boardIndex(value,old,state){
         rerender(value,state.player,state.enemy);
       },
-      player(value,old,state){
-        rerender(state.boardIndex,value,state.enemy);
+      player:(value,old,state)=>{
+        if(old.length > 0 && value.length === 0){
+          this.logObj.log('我军阵亡，输了');
+        }else{
+          rerender(state.boardIndex,value,state.enemy);
+        }
       },
-      enemy(value,old,state){
-        rerender(state.boardIndex, state.player, value);
+      enemy:(value,old,state)=>{
+        if(old.length > 0 && value.length === 0){
+          this.logObj.log('对手死光了，获得胜利了');
+        }else{
+          rerender(state.boardIndex, state.player, value);
+        }
       },
       turnState: (value) => {
         if(value){
@@ -47,7 +55,6 @@ class ChessBoard {
         }else{
           this.logObj.log('到别人啦');
         }
-
         this.isMyTurn = value;
       }
     });
@@ -130,7 +137,6 @@ class ChessBoard {
               });
 
               if(this.isMyTurn !== -1){
-                debugger;
                 this.store.dispatch({
                   type:types.CHANGE_TURN,
                   from:gwentTypes.BROWSER_TAG,

@@ -2,7 +2,6 @@
 
 const path = require('path');
 const fs = require('fs');
-const babel = require('babel-core');
 const webpack = require('webpack');
 const Gwent = require('gwent.js');
 
