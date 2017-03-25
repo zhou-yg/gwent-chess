@@ -29,6 +29,15 @@ class Main {
 
     return div;
   }
+
+  appendToTop (dom) {
+
+    this.top.appendChild(dom)
+  }
+
+  appendToBottom (dom) {
+    this.bottom.appendChild(dom);
+  }
 }
 
 export default Main;

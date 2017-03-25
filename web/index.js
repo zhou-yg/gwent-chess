@@ -75,8 +75,8 @@ const current = new Current();
 
 const chessBoard = new ChessBoard(store, current, logObj);
 
-main.top.appendChild(chessBoard.el);
-main.bottom.appendChild(userList.el);
+main.appendToTop(chessBoard.el);
+main.appendToBottom(userList.el);
 
 store.dispatch({
   type:types.CHESS_ADD,
