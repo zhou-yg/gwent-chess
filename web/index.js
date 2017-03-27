@@ -1,3 +1,4 @@
+
 require('./assets/style.less');
 
 import createStore from './store/store'
@@ -7,7 +8,10 @@ import gwentTypes from 'gwent.js/src/lib/types'
 
 import Main from './models/ui/Main';
 import ChessBoard from './models/ui/ChessBoard';
-import UserList from './models/ui/UserList'
+import UserList from './models/ui/UserList';
+import Current from './models/ui/Current';
+import Operation from './models/ui/Operation';
+
 import Horse from './models/chess/Horse';
 import Rook from './models/chess/Rook';
 
@@ -52,31 +56,26 @@ const logObj = {
   }
 };
 
-class Current {
-  constructor(){
-    var div = document.createElement('div');
-    div.id = 'current';
-    this.el= div;
-  }
-  show({chessType,x,y}){
-    this.el.innerHTML = '';
-
-    var text = `当前选择:${chessType},${x}-${y}`;
-
-    this.el.innerText = text;
-  }
-}
-
 const main = new Main();
 
 const userList = new UserList(socket);
 
 const current = new Current();
 
+const op = new Operation();
+
 const chessBoard = new ChessBoard(store, current, logObj);
 
 main.appendToTop(chessBoard.el);
-main.appendToBottom(userList.el);
+main.appendToTop(current.el);
+main.appendToBottom(op.el);
+
+op.onGame(()=>{
+
+})
+op.onUser(()=>{
+  
+})
 
 store.dispatch({
   type:types.CHESS_ADD,

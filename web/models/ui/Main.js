@@ -8,7 +8,7 @@ class Main {
 
     this.el = m;
     this.top = m.children[0];
-    this.bottom = m.children[0];
+    this.bottom = m.children[2];
   }
 
   html () {
