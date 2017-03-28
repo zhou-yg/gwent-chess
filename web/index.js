@@ -12,9 +12,6 @@ import UserList from './models/ui/UserList';
 import Current from './models/ui/Current';
 import Operation from './models/ui/Operation';
 
-import Horse from './models/chess/Horse';
-import Rook from './models/chess/Rook';
-
 const socket = io();
 
 socket.on('log',function (a){
@@ -64,33 +61,19 @@ const current = new Current();
 
 const op = new Operation();
 
-const chessBoard = new ChessBoard(store, current, logObj);
+const chessBoard = new ChessBoard(socket, store, current, logObj);
 
-main.appendToTop(chessBoard.el);
-main.appendToTop(current.el);
 main.appendToBottom(op.el);
 
+userList.onSelect(()=>{
+  main.top.innerHTML='';
+  main.appendToTop(chessBoard.el);
+});
 op.onGame(()=>{
-
+  main.top.innerHTML='';
+  main.appendToTop(chessBoard.el);
 })
 op.onUser(()=>{
-  
-})
-
-store.dispatch({
-  type:types.CHESS_ADD,
-  from:gwentTypes.BROWSER_TAG,
-  chess:new Horse({
-    x:3,
-    y:8,
-  }).graphicsData(),
-});
-
-store.dispatch({
-  type:types.CHESS_ADD,
-  from:gwentTypes.BROWSER_TAG,
-  chess:new Rook({
-    x:2,
-    y:8,
-  }).graphicsData(),
+  main.top.innerHTML='';
+  main.appendToTop(userList.el);
 });

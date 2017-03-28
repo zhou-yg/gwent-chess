@@ -15,7 +15,7 @@ const userMap = {};
 
 var i = 0;
 
-class BattleManager {
+class BattleManager{
 
   constructor(userA,userB){
     this.userA = userA;
@@ -27,12 +27,13 @@ class BattleManager {
 
     var dispatchers = [this._userADispatch,this._userBDispatch];
 
-    this.unsubscribe = this.users.map((user,i)=>{
+    this.unsubscribes = this.users.map((user,i)=>{
 
       user.store.socketDispatch = (action) => {
 
-        try {
+        console.log(`BattleManager.socketDispatch`);
 
+        try {
 
           dispatchers.forEach((socketDispatch, j)=> {
 
@@ -40,7 +41,6 @@ class BattleManager {
               from:action.from + ` by battle manager`,
               isSelf: i === j,
             });
-            console.log(`Manager.Dispatch ${j}`, action);
 
             socketDispatch.call(this.users[j].store, action);
           });
@@ -59,9 +59,9 @@ class BattleManager {
   }
 
   end () {
-    this.userA.store.dispatch = this._userADispatch;
-    this.userB.store.dispatch = this._userBDispatch;
-    this.unsubscribe.forEach(fn=>fn());
+    this.userA.store.socketDispatch = this._userADispatch;
+    this.userB.store.socketDispatch = this._userBDispatch;
+    this.unsubscribes.forEach(fn=>fn());
   }
 }
 
@@ -178,6 +178,13 @@ app.io.route('new user', function *() {
 
   }
 });
+app.io.route('end game', function * (next) {
+
+  if(this.userData.battleManager){
+    console.log(this.userData.username + ' 匹配结束');
+    this.userData.battleManager.end();
+  }
+});
 app.io.route('match user',function * (next,username){
 
   if(this.userData.battleManager){
@@ -223,8 +230,10 @@ app.io.route('match user',function * (next,username){
 
       battleManager = new BattleManager(this.userData,findPlayer);
 
-      this.userData.battlerManager = battleManager;
-      findPlayer.battlerManager = battleManager;
+      this.userData.battleManager = battleManager;
+      findPlayer.battleManager = battleManager;
+
+      console.log(this.userData);
 
     }catch(e){
       console.log('end e', e);
@@ -232,7 +241,7 @@ app.io.route('match user',function * (next,username){
 
 
   }else{
-    this.emit('log','同名')
+    this.emit('log','不能匹配自己')
   }
 });
 

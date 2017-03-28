@@ -84,6 +84,9 @@ const reducer = {
     }
     return state;
   },
+  [types.RESET_GAME](state, a){
+    return [];
+  }
 }
 
 module.exports = struct(reducer,[]);

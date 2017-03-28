@@ -21,4 +21,6 @@ module.exports = {
 
   START_TURN: '开启回合状态',
   CHANGE_TURN: '转换回合',
+
+  RESET_GAME: '游戏结束，重新初始化',
 };

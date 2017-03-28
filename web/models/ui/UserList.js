@@ -19,10 +19,15 @@ class UserList {
 
       this.render();
     });
+
+    this.selectFn = () => {};
+  }
+
+  onSelect (fn) {
+    this.selectFn = fn;
   }
 
   render(){
-
     const frag = this.list.map(obj=>{
       const li = document.createElement('li');
       li.innerText = obj.username;

@@ -1,7 +1,7 @@
 /**
  * Created by zyg on 17/3/2.
  */
-'use strict' 
+'use strict'
 const types = require('../types');
 const Horse = require('../../models/chess/Horse');
 const Rook = require('../../models/chess/Rook');
@@ -70,6 +70,9 @@ const reducer = {
     });
     return arr;
   },
+  [types.RESET_GAME](state, a){
+    return index();
+  }
 };
 
 const index = () => [

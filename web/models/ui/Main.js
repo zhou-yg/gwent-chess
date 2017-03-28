@@ -31,8 +31,7 @@ class Main {
   }
 
   appendToTop (dom) {
-
-    this.top.appendChild(dom)
+    this.top.appendChild(dom);
   }
 
   appendToBottom (dom) {

@@ -1,12 +1,14 @@
-
 'use strict'
 import types from '../../store/types'
 import watcher from 'gwent.js/src/lib/watcher'
 import gwentTypes from 'gwent.js/src/lib/types'
 
+import Horse from '../chess/Horse';
+import Rook from '../chess/Rook';
+
 class ChessBoard {
 
-  constructor(store, current, logObj){
+  constructor(socket, store, current, logObj){
     var initState = store.getState();
 
     var boardDOM = document.createElement('div');
@@ -20,6 +22,7 @@ class ChessBoard {
     this.enemy = initState.enemy;
     this.el = boardDOM;
     this.store = store;
+    this.socket = socket;
 
     const rerender = (index,player,enemy) => {
       this.player = player;
@@ -35,27 +38,79 @@ class ChessBoard {
         rerender(value,state.player,state.enemy);
       },
       player:(value,old,state)=>{
-        if(old.length > 0 && value.length === 0){
+        if(old.length > 0 && value.length === 0 && state.turnState !== -1){
           this.logObj.log('我军阵亡，输了');
+
+          socket.emit('end game');
+
+          store.dispatch({
+            type: types.START_TURN,
+            from:gwentTypes.BROWSER_TAG,
+            to: -1,
+          });
         }else{
           rerender(state.boardIndex,value,state.enemy);
         }
       },
       enemy:(value,old,state)=>{
-        if(old.length > 0 && value.length === 0){
+        if(old.length > 0 && value.length === 0 && state.turnState !== -1){
           this.logObj.log('对手死光了，获得胜利了');
+
+          socket.emit('end game');
+
+          store.dispatch({
+            type: types.START_TURN,
+            from:gwentTypes.BROWSER_TAG,
+            to: -1,
+          });
+
         }else{
           rerender(state.boardIndex, state.player, value);
         }
       },
-      turnState: (value) => {
-        if(value){
-          this.logObj.log(`现在是你的回合`);
-        }else{
-          this.logObj.log('到别人啦');
+      turnState: (value, old) => {
+        if(old === -1 && value === true) {
+          this.logObj.log(`游戏开始`);
+        }
+        if(value === -1 ){
+          this.logObj.log(`游戏结束`);
+
+          store.dispatch({
+            type: types.RESET_GAME,
+            from: gwentTypes.BROWSER_TAG,
+          });
+          this.initChess();
+        } else {
+          if(value){
+            this.logObj.log(`现在是你的回合`);
+          }else if(value){
+            this.logObj.log('到别人啦');
+          }
         }
         this.isMyTurn = value;
       }
+    });
+
+    this.initChess();
+  }
+
+  initChess(){
+    // this.store.dispatch({
+    //   type:types.CHESS_ADD,
+    //   from:gwentTypes.BROWSER_TAG,
+    //   chess:new Horse({
+    //     x:3,
+    //     y:8,
+    //   }).graphicsData(),
+    // });
+
+    this.store.dispatch({
+      type:types.CHESS_ADD,
+      from:gwentTypes.BROWSER_TAG,
+      chess:new Rook({
+        x:2,
+        y:8,
+      }).graphicsData(),
     });
   }
 
