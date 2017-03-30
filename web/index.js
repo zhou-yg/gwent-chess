@@ -11,6 +11,7 @@ import ChessBoard from './models/ui/ChessBoard';
 import UserList from './models/ui/UserList';
 import Current from './models/ui/Current';
 import Operation from './models/ui/Operation';
+import Data from './Data.js'
 
 const socket = io();
 
@@ -19,11 +20,11 @@ socket.on('log',function (a){
   logObj.log(a);
 });
 
-const store = createStore(socket,{
-  browser:true,
-});
-
 socket.emit('new user');
+
+const data = new Data(socket);
+
+console.log(data);
 
 const logObj = {
   $el: document.querySelector('#log'),
@@ -61,7 +62,7 @@ const current = new Current();
 
 const op = new Operation();
 
-const chessBoard = new ChessBoard(socket, store, current, logObj);
+const chessBoard = new ChessBoard(data,current, logObj)
 
 main.appendToBottom(op.el);
 
@@ -72,7 +73,7 @@ userList.onSelect(()=>{
 op.onGame(()=>{
   main.top.innerHTML='';
   main.appendToTop(chessBoard.el);
-})
+});
 op.onUser(()=>{
   main.top.innerHTML='';
   main.appendToTop(userList.el);

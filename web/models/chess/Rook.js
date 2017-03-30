@@ -12,7 +12,13 @@ class Rook extends Chess{
       chessType:'Rook',
     }))
   }
+  //技能1，移动速度翻倍
+  skill1(){
+  }
+  //技能2，使敌方移动速度减半
+  skill2(){
 
+  }
 }
 
 Rook.checkMoveFn = function(x0,y0,x1,y1){

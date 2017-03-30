@@ -1,6 +1,5 @@
 'use strict'
 import types from '../../store/types'
-import watcher from 'gwent.js/src/lib/watcher'
 import gwentTypes from 'gwent.js/src/lib/types'
 
 import Horse from '../chess/Horse';
@@ -8,8 +7,8 @@ import Rook from '../chess/Rook';
 
 class ChessBoard {
 
-  constructor(socket, store, current, logObj){
-    var initState = store.getState();
+  constructor(data, current, logObj){
+    var initState = data.getState();
 
     var boardDOM = document.createElement('div');
     boardDOM.id = 'board';
@@ -21,8 +20,7 @@ class ChessBoard {
     this.player = initState.player;
     this.enemy = initState.enemy;
     this.el = boardDOM;
-    this.store = store;
-    this.socket = socket;
+    this.data = data;
 
     const rerender = (index,player,enemy) => {
       this.player = player;
@@ -33,7 +31,7 @@ class ChessBoard {
       this.renderChess();
     }
 
-    watcher(store,{
+    data.addWatcher({
       boardIndex(value,old,state){
         rerender(value,state.player,state.enemy);
       },
@@ -43,7 +41,7 @@ class ChessBoard {
 
           socket.emit('end game');
 
-          store.dispatch({
+          data.dispatch({
             type: types.START_TURN,
             from:gwentTypes.BROWSER_TAG,
             to: -1,
@@ -58,7 +56,7 @@ class ChessBoard {
 
           socket.emit('end game');
 
-          store.dispatch({
+          data.dispatch({
             type: types.START_TURN,
             from:gwentTypes.BROWSER_TAG,
             to: -1,
@@ -75,7 +73,7 @@ class ChessBoard {
         if(value === -1 ){
           this.logObj.log(`游戏结束`);
 
-          store.dispatch({
+          data.dispatch({
             type: types.RESET_GAME,
             from: gwentTypes.BROWSER_TAG,
           });
@@ -95,7 +93,7 @@ class ChessBoard {
   }
 
   initChess(){
-    // this.store.dispatch({
+    // this.data.dispatch({
     //   type:types.CHESS_ADD,
     //   from:gwentTypes.BROWSER_TAG,
     //   chess:new Horse({
@@ -104,7 +102,7 @@ class ChessBoard {
     //   }).graphicsData(),
     // });
 
-    this.store.dispatch({
+    this.data.dispatch({
       type:types.CHESS_ADD,
       from:gwentTypes.BROWSER_TAG,
       chess:new Rook({
@@ -161,7 +159,7 @@ class ChessBoard {
               this.logObj.log('原地移动');
             }else{
 
-              const { enemy } = this.store.getState();
+              const { enemy } = this.data.getState();
 
               const targetEnemy = enemy.filter((item) => {
                 return item.x === j && item.y === i;
@@ -171,7 +169,7 @@ class ChessBoard {
 
                 this.logObj.log(`消灭对手${i},${j}`)
 
-                this.store.dispatch({
+                this.data.dispatch({
                   type:types.KILL_CHESS,
                   from:gwentTypes.BROWSER_TAG,
                   who:{
@@ -180,7 +178,7 @@ class ChessBoard {
                   }
                 });
               }
-              this.store.dispatch({
+              this.data.dispatch({
                 type:types.CHESS_MOVE,
                 from:gwentTypes.BROWSER_TAG,
                 selectChess:this.selectChess,
@@ -191,7 +189,7 @@ class ChessBoard {
               });
 
               if(this.isMyTurn !== -1){
-                this.store.dispatch({
+                this.data.dispatch({
                   type:types.CHANGE_TURN,
                   from:gwentTypes.BROWSER_TAG,
                 });
@@ -256,7 +254,7 @@ class ChessBoard {
 
         this.current.show(this.selectChess);
 
-        this.store.dispatch({
+        this.data.dispatch({
           type:types.SELECT_CHESS,
           selectChess:this.selectChess,
         })
