@@ -59,6 +59,13 @@ const reducer = {
       return transformAction(chessObj);
     })
   },
+  [types.CHANGE_CHESS] (state, a){
+    if(a.isSelf){
+      return a.chesses;
+    }
+    return state;
+  },
+
   [types.CHESS_MOVE](state,a){
 
     if(!a.isSelf){
@@ -73,13 +80,6 @@ const reducer = {
     }
     return state;
   },
-  [types.CHANGE_CHESS] (state, a){
-    if(!a.isSelf){
-      return a.chesses;
-    }
-    return state;
-  },
-
   [types.KILL_CHESS](state, a){
     if(a.isSelf){
       const who = a.who;

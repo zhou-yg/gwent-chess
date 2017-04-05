@@ -6,6 +6,7 @@ const defaultConfig = () => {
     y:1,
     type: 'Chess',
     chessType: 'Chess',
+    visionDistance: 2,
   }
 }
 

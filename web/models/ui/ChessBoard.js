@@ -5,6 +5,63 @@ import gwentTypes from 'gwent.js/src/lib/types'
 import Horse from '../chess/Horse';
 import Rook from '../chess/Rook';
 
+const INIT_CODE = 0;
+
+const fnMap = {
+  Horse: Horse.checkMoveFn,
+  Rook : Rook.checkMoveFn,
+}
+
+class Board {
+
+  constructor () {
+    this.selectChess = null;
+    this.index = this.init();
+  }
+
+  init () {
+    return [
+      [INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE],
+      [INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE],
+      [INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE],
+      [INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE],
+      [INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE],
+      [INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE],
+      [INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE],
+      [INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE],
+      [INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE, INIT_CODE],
+    ]
+  }
+
+  clear() {
+    this.index = this.init();
+  }
+
+  select (selectChess) {
+    this.selectChess = selectChess;
+
+    var checkMoveFn = fnMap[selectChess.chessType];
+
+    var arr = this.index.map((row,y)=>{
+      return row.map((code,x)=>{
+        if(checkMoveFn(x,y,selectChess.x,selectChess.y, selectChess.visionDistance) ){
+          if(x !== selectChess.x || y !== selectChess.y){
+            return {
+              type:'move'
+            };
+          }
+          return INIT_CODE;
+        }
+        return INIT_CODE;
+      });
+    });
+
+    this.index = arr;
+
+    return arr;
+  }
+}
+
 class ChessBoard {
 
   constructor(data, current, logObj){
@@ -13,28 +70,36 @@ class ChessBoard {
     var boardDOM = document.createElement('div');
     boardDOM.id = 'board';
 
+    const board = new Board();
+
     this.current = current;
     this.logObj = logObj
     this.isMyTurn = -1; //是否我的回合
-    this.index = initState.index;
+    //this.index = initState.index;
+    this.board = board;
     this.player = initState.player;
     this.enemy = initState.enemy;
     this.el = boardDOM;
     this.data = data;
 
-    const rerender = (index,player,enemy) => {
+    const rerender = (player,enemy) => {
       this.player = player;
       this.enemy = enemy;
-      this.index = index;
 
       this.render();
       this.renderChess();
     }
 
+    current.onSkill(()=>{
+      console.log('放技能')
+      // this.render();
+      // this.renderChess();
+    })
+
     data.addWatcher({
-      boardIndex(value,old,state){
-        rerender(value,state.player,state.enemy);
-      },
+      // boardIndex(value,old,state){
+      //   rerender(value,state.player,state.enemy);
+      // },
       player:(value,old,state)=>{
         if(old.length > 0 && value.length === 0 && state.turnState !== -1){
           this.logObj.log('我军阵亡，输了');
@@ -47,7 +112,7 @@ class ChessBoard {
             to: -1,
           });
         }else{
-          rerender(state.boardIndex,value,state.enemy);
+          rerender(value,state.enemy);
         }
       },
       enemy:(value,old,state)=>{
@@ -63,7 +128,7 @@ class ChessBoard {
           });
 
         }else{
-          rerender(state.boardIndex, state.player, value);
+          rerender(state.player, value);
         }
       },
       turnState: (value, old) => {
@@ -77,6 +142,7 @@ class ChessBoard {
             type: types.RESET_GAME,
             from: gwentTypes.BROWSER_TAG,
           });
+          this.board.clear();
           this.initChess();
         } else {
           if(value){
@@ -101,30 +167,22 @@ class ChessBoard {
     //     y:8,
     //   }).graphicsData(),
     // });
-
-    this.data.dispatch({
-      type:types.CHESS_ADD,
-      from:gwentTypes.BROWSER_TAG,
-      chess:new Rook({
-        x:2,
-        y:8,
-      }).graphicsData(),
-    });
+    this.data.addChess(new Rook({
+      x:2,
+      y:8,
+    }));
   }
 
   render(){
 
     const frag = document.createDocumentFragment();
 
-
-    console.log(this.player.length);
     const isFog = (x0,y0) => {
       const r = this.player.every(obj => {
-        const {x,y} = obj;
+        const {x,y,visionDistance} = obj;
         const dx = Math.abs(x-x0);
         const dy = Math.abs(y-y0);
-        const r0 = dx > 2 || dy > 2 || (dx === dy && dy === 2);
-
+        var r0 = dx > visionDistance || dy > visionDistance || (dx === dy && dy === visionDistance);
         return r0;
       });
       //console.log(r,x0,y0);
@@ -132,7 +190,7 @@ class ChessBoard {
     }
 
     //渲染地形
-    this.index.forEach((row,i)=>{
+    this.board.index.forEach((row,i)=>{
 
       const div = document.createElement('div');
       div.className = 'grid-box';
@@ -155,7 +213,7 @@ class ChessBoard {
 
           grid.onclick = () => {
 
-            if (this.selectChess.x === j && this.selectChess.y === i){
+            if (this.data.selectChess.x === j && this.data.selectChess.y === i){
               this.logObj.log('原地移动');
             }else{
 
@@ -181,12 +239,14 @@ class ChessBoard {
               this.data.dispatch({
                 type:types.CHESS_MOVE,
                 from:gwentTypes.BROWSER_TAG,
-                selectChess:this.selectChess,
+                selectChess:this.data.selectChess,
                 to:{
                   y:i,
                   x:j,
                 }
               });
+              this.board.clear();
+              this.render();
 
               if(this.isMyTurn !== -1){
                 this.data.dispatch({
@@ -219,7 +279,7 @@ class ChessBoard {
       grid.innerHTML = '';
 
       if(isEnemy && grid.classList.contains('fog')){
-
+        console.log('?')
       }else{
         const chess = document.createElement('div');
         chess.classList.add('chess');
@@ -240,24 +300,26 @@ class ChessBoard {
       const chess = addObj(obj);
 
       chess.onclick = ()=>{
+
         if(!this.isMyTurn){
           this.logObj.log('不是你的回合');
           return;
         }
 
-        this.selectChess = {
+
+        this.data.setSelectChess({
           chessType: obj.chessType,
           x,
           y,
           index:i,
-        };
+        });
 
-        this.current.show(this.selectChess);
+        this.current.showSelectChess();
 
-        this.data.dispatch({
-          type:types.SELECT_CHESS,
-          selectChess:this.selectChess,
-        })
+        this.board.select(this.data.selectChess);
+
+        this.render();
+        this.renderChess();
       };
     });
 

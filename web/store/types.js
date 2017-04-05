@@ -8,6 +8,7 @@ module.exports = {
   FIND_PLAYER: '对手',
 
   CHESS_ADD:'棋子添加',
+  CHANGE_CHESS: '变',
 
   CHESS_MOVE:'棋子移动',
 

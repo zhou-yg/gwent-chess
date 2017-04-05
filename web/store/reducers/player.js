@@ -26,6 +26,12 @@ const reducer = {
     }
     return state;
   },
+  [types.CHANGE_CHESS] (state, a){
+    if(a.isSelf){
+      return a.chesses;
+    }
+    return state;
+  },
   [types.KILL_CHESS](state, a){
     if(!a.isSelf){
       const who = transformAction(a.who);

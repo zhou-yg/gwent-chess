@@ -6,6 +6,7 @@ import watch from 'gwent.js/src/lib/watch'
 import gwentTypes from 'gwent.js/src/lib/types'
 import * as _ from 'lodash';
 import delegate from 'delegates'
+import Skill from './models/chess/Skill.js';
 
 function mergeWatch(obj, obj2) {
   obj = _.cloneDeep(obj);
@@ -39,6 +40,8 @@ class Data {
       .method('dispatch')
       .method('subscribe')
 
+    this.chesses = [];
+
     this.watchers = {
     }
 
@@ -49,6 +52,39 @@ class Data {
     this.watchers = mergeWatch(this.watchers,watcherObj);
     this.unWatch();
     this.unWatch = watch(this,this.watchers);
+  }
+
+  addChess (obj) {
+    obj.index = this.chesses.length;
+    this.chesses.push(obj);
+
+    this.store.dispatch({
+      type:types.CHESS_ADD,
+      from:gwentTypes.BROWSER_TAG,
+      chess:Object.assign(obj.graphicsData(),{
+        index: obj.index
+      }),
+    });
+  }
+  setSelectChess (obj) {
+    this.selectChess = obj;
+  }
+
+  doSkill (skillObj) {
+    var skillFunc = Skill.skillsMap[skillObj.id];
+
+    var newState = skillFunc(this.store.getState(), skillObj);
+    //....
+
+    this.store.dispatch({
+      type:types.CHANGE_CHESS,
+      from:gwentTypes.BROWSER_TAG,
+      chesses: this.chesses.map(obj => {
+        return Object.assign(obj.graphicsData(), {
+          index: obj.index,
+        });
+      })
+    })
   }
 }
 

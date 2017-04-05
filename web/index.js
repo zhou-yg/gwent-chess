@@ -1,4 +1,3 @@
-
 require('./assets/style.less');
 
 import createStore from './store/store'
@@ -58,13 +57,14 @@ const main = new Main();
 
 const userList = new UserList(socket);
 
-const current = new Current();
+const current = new Current(data);
 
 const op = new Operation();
 
 const chessBoard = new ChessBoard(data,current, logObj)
 
 main.appendToBottom(op.el);
+main.appendToBottom(current.el);
 
 userList.onSelect(()=>{
   main.top.innerHTML='';

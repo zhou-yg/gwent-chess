@@ -40,39 +40,39 @@ function transformAction (action){
 
 
 const reducer = {
-  [types.CHESS_MOVE](state, a){
-    if(a.isSelf) {
-      //消除移动标志
-      return index();
-    }
-    return state;
-  },
-  [types.CLICK_ON_GRID](state, a){
-
-
-  },
-  [types.SELECT_CHESS](state,a){
-
-    var selectChess = a.selectChess;
-
-    var checkMoveFn = fnMap[selectChess.chessType];
-
-    var arr = state.map((row,y)=>{
-      return row.map((code,x)=>{
-        if(checkMoveFn(x,y,selectChess.x,selectChess.y) ){
-          return {
-            type:'move'
-          };
-        }else{
-          return INIT_CODE;
-        }
-      });
-    });
-    return arr;
-  },
-  [types.RESET_GAME](state, a){
-    return index();
-  }
+  // [types.CHESS_MOVE](state, a){
+  //   if(a.isSelf) {
+  //     //消除移动标志
+  //     return index();
+  //   }
+  //   return state;
+  // },
+  // [types.CLICK_ON_GRID](state, a){
+  //
+  //
+  // },
+  // [types.SELECT_CHESS](state,a){
+  //
+  //   var selectChess = a.selectChess;
+  //
+  //   var checkMoveFn = fnMap[selectChess.chessType];
+  //
+  //   var arr = state.map((row,y)=>{
+  //     return row.map((code,x)=>{
+  //       if(checkMoveFn(x,y,selectChess.x,selectChess.y, selectChess.visionDistance) ){
+  //         return {
+  //           type:'move'
+  //         };
+  //       }else{
+  //         return INIT_CODE;
+  //       }
+  //     });
+  //   });
+  //   return arr;
+  // },
+  // [types.RESET_GAME](state, a){
+  //   return index();
+  // }
 };
 
 const index = () => [
