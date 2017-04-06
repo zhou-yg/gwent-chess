@@ -71,6 +71,11 @@ class Data {
   }
 
   doSkill (skillObj) {
+    // 开始
+    // 目标
+    // 效果
+    // 结果
+    // 结束
     var skillFunc = Skill.skillsMap[skillObj.id];
 
     var newState = skillFunc(this.store.getState(), skillObj);

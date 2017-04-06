@@ -27,6 +27,8 @@ class Current {
 
       d.onclick = ()=>{
         this.data.doSkill(skillObj);
+        // this.skill = new Skill(this.data);
+        // this.skill.doSkill(skillObj);
         this.listeners.forEach(fn => fn());
       }
 
