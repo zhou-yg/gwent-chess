@@ -11,6 +11,7 @@ import UserList from './models/ui/UserList';
 import Current from './models/ui/Current';
 import Operation from './models/ui/Operation';
 import Data from './Data.js'
+import SpellManager from './SpellManager.js';
 
 const socket = io();
 
@@ -22,6 +23,7 @@ socket.on('log',function (a){
 socket.emit('new user');
 
 const data = new Data(socket);
+const spell = new SpellManager(data);
 
 console.log(data);
 
@@ -57,7 +59,7 @@ const main = new Main();
 
 const userList = new UserList(socket);
 
-const current = new Current(data);
+const current = new Current(data,spell);
 
 const op = new Operation();
 

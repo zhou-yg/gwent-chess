@@ -1,7 +1,7 @@
 'use strict'
 
 const Chess = require( './Chess.js');
-const Skill = require('./Skill.js');
+const Spell = require('./Spell.js');
 class Rook extends Chess{
 
   constructor(config){
@@ -12,20 +12,20 @@ class Rook extends Chess{
       chessType:'Rook',
     }));
 
-    this.skills = [
-      new Skill({
-        id:'skill00',
+    this.spells = [
+      new Spell({
+        id:'spell00',
         name: '加速',
-        skill: 'skill1',
+        spell: 'spell1',
         self:this,
         style:{
           background:'red',
         },
       }),
-      new Skill({
-        id:'skill01',
+      new Spell({
+        id:'spell01',
         name: '减速全体',
-        skill: 'skillx',
+        spell: 'spellx',
         self:this,
         style:{
           background:'blue',

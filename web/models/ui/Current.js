@@ -1,15 +1,15 @@
 'use strict';
 
 class Current {
-  constructor(data){
+  constructor(data,spell){
     var div = document.createElement('div');
     div.id = 'current';
     this.el= div;
     this.data = data;
-    this.listeners = [];
+    this.spell = spell;
   }
   showSelectChess(){
-    var {index, skills,chessType,x,y} = this.data.chesses[this.data.selectChess.index];
+    var {index, spells,chessType,x,y} = this.data.chesses[this.data.selectChess.index];
     this.el.innerHTML = '';
 
     var frag = document.createDocumentFragment();
@@ -17,32 +17,26 @@ class Current {
     var text = document.createTextNode(`当前选择:${index}, ${chessType},${x}-${y}`);
 
     frag.appendChild(text);
-    skills.forEach(skillObj => {
+    spells.forEach(spellObj => {
 
       var d = document.createElement('div');
 
-      d.className = 'skill-one';
-      d.style.background = skillObj.style.background;
-      d.innerText = skillObj.name;
+      d.className = 'spell-one';
+      d.style.background = spellObj.style.background;
+      d.innerText = spellObj.name;
 
       d.onclick = ()=>{
-        this.data.doSkill(skillObj);
-        // this.skill = new Skill(this.data);
-        // this.skill.doSkill(skillObj);
-        this.listeners.forEach(fn => fn());
+        //this.data.doSpell(spellObj);
+        // this.spell = new Spell(this.data);
+        this.spell.castSpell(spellObj);
+        //this.listeners.forEach(fn => fn());
       }
 
       frag.appendChild(d)
     });
     this.el.appendChild(frag);
   }
-  onSkill(fn){
-    this.listeners.push(fn);
-    return ()=>{
-      this.listeners = this.listeners.filter((f) => {
-        return f !== fn;
-      });
-    }
+  onSpell(fn){
   }
 }
 

@@ -90,16 +90,7 @@ class ChessBoard {
       this.renderChess();
     }
 
-    current.onSkill(()=>{
-      console.log('放技能')
-      // this.render();
-      // this.renderChess();
-    })
-
     data.addWatcher({
-      // boardIndex(value,old,state){
-      //   rerender(value,state.player,state.enemy);
-      // },
       player:(value,old,state)=>{
         if(old.length > 0 && value.length === 0 && state.turnState !== -1){
           this.logObj.log('我军阵亡，输了');

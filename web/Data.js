@@ -1,12 +1,13 @@
 'use strict';
 import createStore from './store/store'
+
 import types from './store/types'
+import gwentTypes from 'gwent.js/src/lib/types'
 
 import watch from 'gwent.js/src/lib/watch'
-import gwentTypes from 'gwent.js/src/lib/types'
 import * as _ from 'lodash';
 import delegate from 'delegates'
-import Skill from './models/chess/Skill.js';
+import Spell from './models/chess/Spell.js';
 
 function mergeWatch(obj, obj2) {
   obj = _.cloneDeep(obj);
@@ -25,6 +26,83 @@ function mergeWatch(obj, obj2) {
   });
 
   return obj;
+}
+
+class Dep {
+
+}
+Dep.targetStack = [];
+function pushTarget (t) {
+  if(Dep.target){
+    Dep.targetStack.push(Dep.target);
+  }
+  Dep.target = t;
+}
+function popTarget (){
+  Dep.target = Dep.targetStack.pop();
+}
+class Watcher {
+
+  constructor(instance,key){
+    let w = this;
+    let data = instance[key];
+
+    this.instance = instance;
+    this.key = key;
+    this.value = null;
+    this.parents = new Set();
+    this.subs = [];
+
+    if(typeof data !== 'function'){
+      Object.defineProperty(instance,key,{
+        set(v){
+          w.value = v;
+          w.subs.forEach(fn=>{
+            fn.call(instance);
+          });
+
+          w.parents.forEach(watchObj=>{
+            watchObj.update();
+          });
+        },
+        get(){
+          if(Dep.target){
+            w.parents.add(Dep.target);
+          }
+          return w.value;
+        }
+      });
+    }else{
+      Object.defineProperty(instance,key,{
+        set(v){
+        },
+        get(){
+          pushTarget(w);
+          w.value = data.call(instance);
+          popTarget();
+          return w.value;
+        }
+      });
+
+      this.value = instance[key];
+    }
+    instance.$watchs[key] = this;
+  }
+
+  on(fn){
+    this.subs.push(fn);
+  }
+
+  update(){
+    this.value = this.instance[this.key];
+
+    this.subs.forEach(fn=>{
+      fn.call(this.instance,this.value);
+    });
+    this.parents.forEach(watchObj=>{
+      watchObj.update();
+    })
+  }
 }
 
 class Data {
@@ -46,6 +124,18 @@ class Data {
     }
 
     this.unWatch = () => {};
+
+    Object.keys(types).forEach(type => {
+      this[type] = {
+        dispatch : (action) => {
+          action = Object.assign({},action,{
+            type:types[type],
+            from: gwentTypes.BROWSER_TAG,
+          });
+          this.store.dispatch(action);
+        }
+      }
+    });
   }
 
   addWatcher (watcherObj) {
@@ -69,28 +159,7 @@ class Data {
   setSelectChess (obj) {
     this.selectChess = obj;
   }
-
-  doSkill (skillObj) {
-    // 开始
-    // 目标
-    // 效果
-    // 结果
-    // 结束
-    var skillFunc = Skill.skillsMap[skillObj.id];
-
-    var newState = skillFunc(this.store.getState(), skillObj);
-    //....
-
-    this.store.dispatch({
-      type:types.CHANGE_CHESS,
-      from:gwentTypes.BROWSER_TAG,
-      chesses: this.chesses.map(obj => {
-        return Object.assign(obj.graphicsData(), {
-          index: obj.index,
-        });
-      })
-    })
-  }
 }
+
 
 export default Data;
