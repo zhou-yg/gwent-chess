@@ -65,7 +65,6 @@ class Board {
 class ChessBoard {
 
   constructor(data, current, logObj){
-    var initState = data.getState();
 
     var boardDOM = document.createElement('div');
     boardDOM.id = 'board';
@@ -77,8 +76,8 @@ class ChessBoard {
     this.isMyTurn = -1; //是否我的回合
     //this.index = initState.index;
     this.board = board;
-    this.player = initState.player;
-    this.enemy = initState.enemy;
+    this.player = data.player;
+    this.enemy = data.enemy;
     this.el = boardDOM;
     this.data = data;
 
@@ -90,9 +89,9 @@ class ChessBoard {
       this.renderChess();
     }
 
-    data.addWatcher({
+    data.watch({
       player:(value,old,state)=>{
-        if(old.length > 0 && value.length === 0 && state.turnState !== -1){
+        if(old.length > 0 && value.length === 0 && this.turnState !== -1){
           this.logObj.log('我军阵亡，输了');
 
           socket.emit('end game');
@@ -103,11 +102,11 @@ class ChessBoard {
             to: -1,
           });
         }else{
-          rerender(value,state.enemy);
+          rerender(value,this.enemy);
         }
       },
       enemy:(value,old,state)=>{
-        if(old.length > 0 && value.length === 0 && state.turnState !== -1){
+        if(old.length > 0 && value.length === 0 && this.turnState !== -1){
           this.logObj.log('对手死光了，获得胜利了');
 
           socket.emit('end game');
@@ -119,7 +118,7 @@ class ChessBoard {
           });
 
         }else{
-          rerender(state.player, value);
+          rerender(this.player, value);
         }
       },
       turnState: (value, old) => {

@@ -25,8 +25,6 @@ socket.emit('new user');
 const data = new Data(socket);
 const spell = new SpellManager(data);
 
-console.log(data);
-
 const logObj = {
   $el: document.querySelector('#log'),
   data:{

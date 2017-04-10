@@ -28,6 +28,12 @@ function mergeWatch(obj, obj2) {
   return obj;
 }
 
+function dataDefault() {
+  return {
+    chesses: [],
+  }
+}
+
 class Dep {
 
 }
@@ -49,21 +55,18 @@ class Watcher {
 
     this.instance = instance;
     this.key = key;
-    this.value = null;
+    this.value = instance[key];
+    this.oldValue = instance[key];
     this.parents = new Set();
     this.subs = [];
 
     if(typeof data !== 'function'){
       Object.defineProperty(instance,key,{
         set(v){
+          w.oldValue = w.value;
           w.value = v;
-          w.subs.forEach(fn=>{
-            fn.call(instance);
-          });
 
-          w.parents.forEach(watchObj=>{
-            watchObj.update();
-          });
+          w.notify();
         },
         get(){
           if(Dep.target){
@@ -94,6 +97,11 @@ class Watcher {
 
   on(fn){
     this.subs.push(fn);
+    return () => {
+      this.subs = this.subs.filter(f=>{
+        return f !== fn;
+      })
+    }
   }
   off(fn){
     this.subs = this.subs.filter(f=>{
@@ -101,37 +109,40 @@ class Watcher {
     })
   }
 
-  update(){
+  notify(){
     this.value = this.instance[this.key];
 
     this.subs.forEach(fn=>{
-      fn.call(this.instance,this.value);
+      fn.call(this.instance,this.value,this.oldValue);
     });
     this.parents.forEach(watchObj=>{
-      watchObj.update();
+      watchObj.notify();
     })
   }
 }
 
 class Data {
 
-  constructor (socket) {
+  constructor (socket, config) {
+
+    if(!config){
+      config = {};
+    }
 
     this.store = createStore(socket,{
       browser:true,
     });
+
+    const initState = this.store.getState();
+    const initStateKeys = Object.keys(initState);
 
     delegate(this, 'store')
       .method('getState')
       .method('dispatch')
       .method('subscribe')
 
-    this.chesses = [];
-
-    this.watchers = {
-    }
-
-    this.unWatch = () => {};
+    const initConfig = Object.assign(dataDefault(), initState, config);
+    Object.assign(this,initConfig);
 
     Object.keys(types).forEach(type => {
       this[type] = {
@@ -145,9 +156,19 @@ class Data {
       }
     });
 
-    ['chesses'].map(propertyName=>{
+    Object.keys(initConfig).map(propertyName=>{
       new Watcher(this, propertyName);
-    })
+    });
+
+    const _self = this;
+    watch(this.store,initStateKeys.reduce((p, key) => {
+      return Object.assign(p,{
+        [key](v){
+          // console.log(this,key,v);
+          _self[key] = v;
+        }
+      })
+    }, {}));
   }
   watch(obj){
     Object.keys(obj).map(name=>{
@@ -158,11 +179,11 @@ class Data {
     })
   }
 
-  addWatcher (watcherObj) {
-    this.watchers = mergeWatch(this.watchers,watcherObj);
-    this.unWatch();
-    this.unWatch = watch(this,this.watchers);
-  }
+  // addWatcher (watcherObj) {
+  //   this.watchers = mergeWatch(this.watchers,watcherObj);
+  //   this.unWatch();
+  //   this.unWatch = watch(this,this.watchers);
+  // }
 
   addChess (obj) {
     obj.index = this.chesses.length;
