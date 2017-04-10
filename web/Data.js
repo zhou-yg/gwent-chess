@@ -86,11 +86,19 @@ class Watcher {
 
       this.value = instance[key];
     }
+    if(!instance.$watchs){
+        instance.$watchs = {};
+    }
     instance.$watchs[key] = this;
   }
 
   on(fn){
     this.subs.push(fn);
+  }
+  off(fn){
+    this.subs = this.subs.filter(f=>{
+      return f !== fn;
+    })
   }
 
   update(){
@@ -136,6 +144,18 @@ class Data {
         }
       }
     });
+
+    ['chesses'].map(propertyName=>{
+      new Watcher(this, propertyName);
+    })
+  }
+  watch(obj){
+    Object.keys(obj).map(name=>{
+      const watch = this.$watchs[name];
+      if(watch){
+        watch.on(obj[name].bind(this));
+      }
+    })
   }
 
   addWatcher (watcherObj) {
