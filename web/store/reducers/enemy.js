@@ -75,7 +75,10 @@ const reducer = {
   },
   [types.CHANGE_CHESS] (state, a){
     if(!a.isSelf){
-      return a.chesses;
+      return a.chesses.map(chessObj=>{
+        chessObj.camp = 'enemy';
+        return transformAction(chessObj);
+      });
     }
     return state;
   },

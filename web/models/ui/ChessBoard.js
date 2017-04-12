@@ -91,10 +91,11 @@ class ChessBoard {
 
     data.watch({
       player:(value,old,state)=>{
-        if(old.length > 0 && value.length === 0 && this.turnState !== -1){
+        if(old.length > 0 && value.length === 0 && data.gameState === 1){
           this.logObj.log('我军阵亡，输了');
 
-          socket.emit('end game');
+          this.data.socket.emit('end game');
+          this.data.gameState = 0;
 
           data.dispatch({
             type: types.START_TURN,
@@ -106,10 +107,11 @@ class ChessBoard {
         }
       },
       enemy:(value,old,state)=>{
-        if(old.length > 0 && value.length === 0 && this.turnState !== -1){
+        if(old.length > 0 && value.length === 0 && data.gameState === 1){
           this.logObj.log('对手死光了，获得胜利了');
 
-          socket.emit('end game');
+          this.data.socket.emit('end game');
+          this.data.gameState = 0;
 
           data.dispatch({
             type: types.START_TURN,
@@ -298,9 +300,6 @@ class ChessBoard {
 
 
         this.data.setSelectChess({
-          chessType: obj.chessType,
-          x,
-          y,
           index:i,
         });
 

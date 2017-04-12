@@ -73,6 +73,7 @@ const app = Gwent({
     this.userData = {
       username: 'u' + (i++),
       store: this.store,
+      socket: this,
     };
 
     userMap[this.socket.id] = this.userData;
@@ -191,17 +192,28 @@ app.io.route('match user',function * (next,username){
     this.userData.battlerManager.end();
   }
 
-  if(username !== this.userData.username){
+  var findPlayer = null;
 
-    var findPlayer = null;
+  console.log('start find');
 
-    Object.keys(userMap).map(socketId=>{
-      if(userMap[socketId].username === username ){
-        findPlayer = userMap[socketId];
+  const socketIdArr = Object.keys(userMap);
+  const allLen = socketIdArr.length;
+  var i = 0;
+  try{
+    while (i < allLen) {
+      if(userMap[socketIdArr[i]].username !== this.userData.username){
+        findPlayer = userMap[socketIdArr[i]];
+        break;
       }
-    });
+      i++;
+    }
+  }catch(e){
+    console.log('match error:',e);
+  }
 
-    console.log('findPlayer:',findPlayer);
+  console.log('findPlayer:',findPlayer);
+
+  if(findPlayer){
 
     var battleManager;
     try{
@@ -235,13 +247,15 @@ app.io.route('match user',function * (next,username){
 
       console.log(this.userData);
 
+      this.emit('game start');
+      findPlayer.socket.emit('game start');
+
     }catch(e){
       console.log('end e', e);
     }
 
-
   }else{
-    this.emit('log','不能匹配自己')
+    this.emit('log','无法匹配到对手');
   }
 });
 

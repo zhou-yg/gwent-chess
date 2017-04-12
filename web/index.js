@@ -10,8 +10,8 @@ import ChessBoard from './models/ui/ChessBoard';
 import UserList from './models/ui/UserList';
 import Current from './models/ui/Current';
 import Operation from './models/ui/Operation';
-import Data from './Data.js'
-import SpellManager from './SpellManager.js';
+import Data from './Data'
+import SpellManager from './SpellManager';
 
 const socket = io();
 
@@ -70,9 +70,21 @@ userList.onSelect(()=>{
   main.top.innerHTML='';
   main.appendToTop(chessBoard.el);
 });
+
+data.watch({
+  gameState(v){
+    if(v === 1){
+      main.top.innerHTML='';
+      main.appendToTop(chessBoard.el);
+    }
+  }
+})
+
 op.onGame(()=>{
-  main.top.innerHTML='';
-  main.appendToTop(chessBoard.el);
+  // main.top.innerHTML='';
+  // main.appendToTop(chessBoard.el);
+  logObj.log('开始匹配');
+  socket.emit('match user');
 });
 op.onUser(()=>{
   main.top.innerHTML='';

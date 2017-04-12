@@ -15,7 +15,7 @@ class Rook extends Chess{
     this.spells = [
       new Spell({
         id:'spell00',
-        name: '加速',
+        name: '加视野',
         spell: 'spell1',
         self:this,
         style:{

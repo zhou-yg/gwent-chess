@@ -24,4 +24,9 @@ module.exports = {
   CHANGE_TURN: '转换回合',
 
   RESET_GAME: '游戏结束，重新初始化',
+
+
+
+  // 游戏,
+  CHANGE_VISION_DISTANCE: '改变视野',
 };

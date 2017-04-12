@@ -12,6 +12,7 @@ import Watcher from './Watcher'
 
 function dataDefault() {
   return {
+    gameState: 0,
     roundNumber: 0,
     chesses: [],
   }
@@ -27,6 +28,11 @@ class Data {
 
     this.store = createStore(socket,{
       browser:true,
+    });
+    this.socket = socket;
+
+    socket.on('game start', ()=>{
+      this.gameState = 1;
     });
 
     const initState = this.store.getState();
@@ -106,8 +112,8 @@ class Data {
       }),
     });
   }
-  setSelectChess (obj) {
-    this.selectChess = obj;
+  setSelectChess ({index}) {
+      this.selectChess = this.player[index];
   }
 }
 

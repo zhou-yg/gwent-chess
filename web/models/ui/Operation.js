@@ -7,11 +7,11 @@ class Operation {
     user.innerText = '用户'
     const game = document.createElement('div');
     game.className = 'operation__game';
-    game.innerText = '游戏'
+    game.innerText = '开始游戏'
     const div = document.createElement('div');
     div.id = 'operation';
 
-    div.appendChild(user);
+    //div.appendChild(user);
     div.appendChild(game);
 
     user.onclick = () => {
