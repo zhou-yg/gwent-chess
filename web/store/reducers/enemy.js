@@ -95,7 +95,20 @@ const reducer = {
   },
   [types.RESET_GAME](state, a){
     return [];
-  }
+  },
+  [types.CHANGE_VISION_DISTANCE](state, a){
+    if(!a.isSelf){
+      return state.map((item, i)=>{
+        if(i === a.index || a.index === -1){
+          return Object.assign({},item,{
+            visionDistance:a.visionDistance,
+          });
+        }
+        return item;
+      })
+    }
+    return state;
+  },
 }
 
 module.exports = struct(reducer,[]);

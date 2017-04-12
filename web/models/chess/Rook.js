@@ -24,7 +24,7 @@ class Rook extends Chess{
       }),
       new Spell({
         id:'spell01',
-        name: '减速全体',
+        name: '敌方减少视野',
         spell: 'spellx',
         self:this,
         style:{

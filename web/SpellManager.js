@@ -34,7 +34,27 @@ const spellsMap = {
     });
   },
   [SPELL_ID_02] : function (data, spellObj) {
+    data.CHANGE_VISION_DISTANCE.dispatch({
+      index:-1,
+      visionDistance: 1,
+    });
 
+    const curRound = data.roundNumber;
+
+    data.watch({
+      roundNumber (v,old,off) {
+        console.log('回合数:', v);
+        if(v - curRound > 1){
+
+          data.CHANGE_VISION_DISTANCE.dispatch({
+            index:-1,
+            visionDistance: 2,
+          });
+
+          off();
+        }
+      },
+    });
   },
 }
 
