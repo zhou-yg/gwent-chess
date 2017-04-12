@@ -34,7 +34,7 @@ const spellsMap = {
     });
   },
   [SPELL_ID_02] : function (data, spellObj) {
-    data.CHANGE_VISION_DISTANCE.dispatch({
+    data.SPELL_02.dispatch({
       index:-1,
       visionDistance: 1,
     });
@@ -46,7 +46,7 @@ const spellsMap = {
         console.log('回合数:', v);
         if(v - curRound > 1){
 
-          data.CHANGE_VISION_DISTANCE.dispatch({
+          data.SPELL_02.dispatch({
             index:-1,
             visionDistance: 2,
           });

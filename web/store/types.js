@@ -29,4 +29,6 @@ module.exports = {
 
   // 游戏,
   CHANGE_VISION_DISTANCE: '改变视野',
+
+  SPELL_02: '减速敌方',
 };

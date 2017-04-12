@@ -54,10 +54,23 @@ const reducer = {
           });
         }
         return item;
-      })
+      });
     }
     return state;
   },
+  [types.SPELL_02](state,a){
+    if(!a.isSelf){
+      return state.map((item, i)=>{
+        if(a.index === -1){
+          return Object.assign({},item,{
+            visionDistance:a.visionDistance,
+          });
+        }
+        return item;
+      });
+    }
+    return state;
+  }
 };
 
 
