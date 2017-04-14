@@ -151,14 +151,10 @@ class ChessBoard {
   }
 
   initChess(){
-    // this.data.dispatch({
-    //   type:types.CHESS_ADD,
-    //   from:gwentTypes.BROWSER_TAG,
-    //   chess:new Horse({
-    //     x:3,
-    //     y:8,
-    //   }).graphicsData(),
-    // });
+    this.data.addChess(new Horse({
+      x:3,
+      y:8,
+    }))
     this.data.addChess(new Rook({
       x:2,
       y:8,
@@ -277,7 +273,7 @@ class ChessBoard {
         chess.classList.add('chess');
         chess.classList.add(obj.chessType);
         chess.classList.add(obj.camp);
-        chess.innerText = obj.chessType;
+        chess.innerText = obj.name;
 
         grid.appendChild(chess);
 
