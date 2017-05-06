@@ -30,8 +30,9 @@ export default class Index extends PactComponent {
     const {member} = this.state;
 
     return (
-      <c>
+      <c key="index">
         <sprite
+          key="must has a key"
           texture={loader().Start.texture}
           member={member}
         />
