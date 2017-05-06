@@ -78,3 +78,6 @@ node_modules
 # Created by .ignore support plugin (hsz.mobi)
 
 _test/
+
+client1.js
+client2.js

@@ -10,6 +10,8 @@ const mfs = new MemoryFS();
 
 const createStore = require('./web/store/store.js');
 const types = require('./web/store/types.js');
+const webpackConfig = require('./webpack.config');
+const compiler = webpack(webpackConfig);
 
 const userMap = {};
 
@@ -90,53 +92,13 @@ const app = Gwent({
   }
 });
 
-const webpackConfig = {
-
-  entry: {
-    client: path.join(__dirname, './web/index.js'),
-  },
-  output: {
-    path: __dirname,
-    publicPath: '/',
-    filename: '[name].js'
-  },
-  resolve: {
-    extensions: ['.js']
-  },
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
-      },
-      {
-        test: /\.less$/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-          },
-          {
-            loader: 'less-loader',
-          },
-        ],
-        exclude: /node_modules/
-      }
-    ]
-  }
-};
-
-var compiler = webpack(webpackConfig);
 compiler.outputFileSystem = mfs;
 
-function jsContent() {
+function jsContent(i) {
   return new Promise(resolve=> {
     compiler.run((err, stats)=> {
 
-      var content = mfs.readFileSync(path.join(__dirname, './client.js'));
+      var content = mfs.readFileSync(path.join(__dirname, `./client${i}.js`));
 
       resolve(content);
     });
@@ -147,20 +109,33 @@ function jsContent() {
 
 app.use(function *(next) {
 
-  if (/index\.js$/.test(this.request.path)) {
+  if (/index1\.js$/.test(this.request.path)) {
     this.response.set('Content-type', 'application/javascript');
 
-    this.body = yield jsContent();
+    this.body = yield jsContent(1);
 
+  } else if (/index2\.js$/.test(this.request.path)) {
+    this.response.set('Content-type', 'application/javascript');
+
+    this.body = yield jsContent(2);
+  } else if (/index1$/.test(this.request.path)) {
+    this.response.set('Content-type', 'text/html');
+    this.body = fs.createReadStream('./web/index.html');
+
+  } else if (/index2$/.test(this.request.path)) {
+    this.response.set('Content-type', 'text/html');
+    this.body = fs.createReadStream('./web2/index.html');
+  }else if(/web2\/view\/[\w]+\/[\w]+\.(jpg|png)$/.test(this.request.path)){
+    const parsedPath = path.parse(this.request.path);
+    const ext = parsedPath.ext.replace(/jpg/, 'jpeg');
+    const name = parsedPath.name[0].toUpperCase() + parsedPath.name.substr(1);
+    this.response.set('Content-type', `image/${ext}`);
+    this.body = fs.createReadStream(path.join(`./web2/view/${name}/`, `${name}${parsedPath.ext}`))
   } else {
     yield next;
   }
 })
 
-app.use(function *() {
-  this.response.set('Content-type', 'text/html');
-  this.body = fs.createReadStream('./web/index.html');
-});
 
 app.io.route('new user', function *() {
   console.log('new user');
