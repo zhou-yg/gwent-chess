@@ -1,5 +1,7 @@
 const resources = [
-  'Start.jpg'
+  'Start.jpg',
+  'TrialButton.png',
+  'Title.png',
 ];
 
 const myLoader = new PIXI.loaders.Loader();

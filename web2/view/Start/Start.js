@@ -1,5 +1,7 @@
 'use strict';
 import loader from '../../loader';
+import Title from '../Title/';
+import TrialButton from '../TrialButton';
 
 import {
   h,
@@ -12,6 +14,8 @@ import {
 export default class Index extends PactComponent {
   constructor(props) {
     super(props);
+
+    this.displayName = 'Index';
 
     const member = {
       'scale.x' : 0.2,
@@ -31,11 +35,8 @@ export default class Index extends PactComponent {
 
     return (
       <c key="index">
-        <sprite
-          key="must has a key"
-          texture={loader().Start.texture}
-          member={member}
-        />
+        <Title key="title" />
+        <TrialButton key="trialButton"/>
       </c>
     );
   }
