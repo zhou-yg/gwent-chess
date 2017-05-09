@@ -2,11 +2,12 @@ const resources = [
   'Start.jpg',
   'TrialButton.png',
   'Title.png',
+  'Dragon.json',
 ];
 
 const myLoader = new PIXI.loaders.Loader();
 
-var loader;
+var resource;
 
 export function load(cb) {
 
@@ -19,7 +20,7 @@ export function load(cb) {
 
   myLoader.load(function (curLoader, resourceMap) {
 
-    loader = resourceMap;
+    resource = resourceMap;
 
     cb(resourceMap);
   });
@@ -27,5 +28,5 @@ export function load(cb) {
 
 export default function getLoader() {
 
-  return loader;
+  return resource;
 };
