@@ -2,7 +2,7 @@
 import loader from '../../loader';
 import Title from '../Title/';
 import TrialButton from '../TrialButton';
-import Dragon from '../Dragon';
+import Prince from '../Prince';
 
 import {
   h,
@@ -38,7 +38,7 @@ export default class Index extends PactComponent {
       <c key="index">
         <Title key="title" />
         <TrialButton key="trialButton"/>
-        <Dragon key="dragon"/>
+        <Prince key="price"/>
       </c>
     );
   }
