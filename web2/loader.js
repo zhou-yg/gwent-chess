@@ -1,5 +1,4 @@
 const resources = [
-  'Start.jpg',
   'TrialButton.png',
   'Title.png',
   'Prince.json',
@@ -15,7 +14,7 @@ export function load(cb) {
 
     const name = imgName.replace(/\.[\w]+/,'');
 
-    myLoader.add(name, `/web2/view/${name}/${imgName}`);
+    myLoader.add(name, `/web2/static/${imgName}`);
   });
 
   myLoader.load(function (curLoader, resourceMap) {

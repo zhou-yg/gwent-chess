@@ -1,6 +1,6 @@
 import 'pixi.js';
 
-import Start from './view/Start';
+import Start from './view/index/Start';
 import {load} from './loader';
 
 import {

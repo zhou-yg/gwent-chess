@@ -125,7 +125,7 @@ app.use(function *(next) {
   } else if (/index2$/.test(this.request.path)) {
     this.response.set('Content-type', 'text/html');
     this.body = fs.createReadStream('./web2/index.html');
-  }else if(/web2\/view\/[\w]+\/[\w]+\.(jpg|png|json)$/.test(this.request.path)){
+  }else if(/web2\/static\/[\w]+\.(jpg|png|json)$/.test(this.request.path)){
     const parsedPath = path.parse(this.request.path);
     const ext = parsedPath.ext.replace(/^\./,'').replace(/jpg/, 'jpeg');
     const name = parsedPath.name[0].toUpperCase() + parsedPath.name.substr(1);
@@ -134,7 +134,7 @@ app.use(function *(next) {
     }else{
       this.response.set('Content-type', `image/${ext}`);
     }
-    this.body = fs.createReadStream(path.join(`./web2/view/${name}/`, `${name}${parsedPath.ext}`))
+    this.body = fs.createReadStream(path.join(`./web2/static/`, `${name}${parsedPath.ext}`))
   } else {
     yield next;
   }

@@ -1,8 +1,8 @@
 'use strict';
 import loader from '../../loader';
-import Title from '../Title/';
-import TrialButton from '../TrialButton';
-import Prince from '../Prince';
+import Title from './Title';
+import TrialButton from './TrialButton';
+import Prince from './Prince';
 
 import {
   h,
