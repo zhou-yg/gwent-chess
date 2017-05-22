@@ -56,9 +56,9 @@ class CellSprite extends PactComponent {
     }
 
     const w = MAX_W/CELL_W;
-
+    var decorates = [];
     if(cell.type === 0 ){
-      const grasses = _.range(_.random(3)).map(index => {
+      decorates = _.range(_.random(3)).map(index => {
         const myMember = Object.assign({
           x: _.random(20, w - 20),
           y: _.random(20, w - 20),
@@ -68,7 +68,7 @@ class CellSprite extends PactComponent {
         return (
           <sp key={key} member={myMember} texture={loader()[`grass${grassType}`].texture} />
         );
-      });      
+      });
     }
 
     const color = i%2 ===0 ? 0xffffff : 0xeeeeee;
@@ -76,7 +76,7 @@ class CellSprite extends PactComponent {
     return (
       <c member={topMember}>
         <rect color={color} w={w} h={w} />
-        {grasses}
+        {decorates}
       </c>
     );
   }
