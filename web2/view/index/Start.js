@@ -35,10 +35,10 @@ export default class Index extends PactComponent {
     const {member} = this.state;
 
     return (
-      <c key="index">
-        <Title key="title" />
-        <TrialButton key="trialButton"/>
-        <Prince key="price"/>
+      <c>
+        <Title />
+        <TrialButton />
+        <Prince />
       </c>
     );
   }

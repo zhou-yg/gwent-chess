@@ -1,7 +1,9 @@
 import 'pixi.js';
 
 import Start from './view/index/Start';
+import Main from './view/battle/Main';
 import {load} from './loader';
+import * as _ from 'lodash';
 
 import {
   h,
@@ -17,11 +19,11 @@ const app = new PIXI.Application({
 window.app = app;
 document.body.appendChild(app.view);
 
+window._ = _;
+
 load(() => {
 
-  const index = h(Start);
+  const index = h(Main);
 
-  window.indexNode = index;
   window.indexInst = renderTo(index, app.stage);
-
 });

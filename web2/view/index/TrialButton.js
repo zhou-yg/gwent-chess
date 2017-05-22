@@ -24,11 +24,15 @@ export default class TrialButton extends PactComponent {
     }
   }
 
+  testClick(){
+    console.log('click')
+  }
+
   render () {
     const {member}=this.state;
 
     return (
-      <sprite key="sp2" member={member} texture={loader().TrialButton.texture} />
+      <sprite onTouch={this.testClick} key="sp2" member={member} texture={loader().TrialButton.texture} />
     );
   }
 }
