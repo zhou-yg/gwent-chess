@@ -20,7 +20,6 @@ class Data {
     Object.keys(initConfig).map(propertyName=>{
       new Watcher(this, propertyName);
     });
-
   }
   watch(obj){
     Object.keys(obj).map(name=>{

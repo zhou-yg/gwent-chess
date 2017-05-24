@@ -5,6 +5,8 @@ import Main from './view/battle/Main';
 import {load} from './loader';
 import * as _ from 'lodash';
 
+import createStore from './store/store';
+
 import {
   h,
   renderTo,
@@ -20,6 +22,12 @@ window.app = app;
 document.body.appendChild(app.view);
 
 window._ = _;
+
+const socket = io();
+
+const store = createStore(socket, {
+  browser: true,
+});
 
 load(() => {
 

@@ -58,7 +58,7 @@ class CellSprite extends PactComponent {
     const w = MAX_W/CELL_W;
     var decorates = [];
     if(cell.type === 0 ){
-      decorates = _.range(_.random(3)).map(index => {
+      decorates = _.range(_.random(1,3)).map(index => {
         const myMember = Object.assign({
           x: _.random(20, w - 20),
           y: _.random(20, w - 20),
