@@ -3,10 +3,7 @@
  */
 const _ = require('lodash');
 const types = require('../types');
-const INIT_CODE = require('./chess').INIT_CODE;
-const WIDTH = require('./chess').WIDTH - 1;
-const HEIGHT = require('./chess').HEIGHT - 1;
-const struct = require('./chess').struct;
+const struct = require('../config').struct;
 
 const reducer = {
 
