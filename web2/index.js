@@ -4,8 +4,8 @@ import Start from './view/index/Start';
 import Main from './view/battle/Main';
 import {load} from './loader';
 import * as _ from 'lodash';
-
-import createStore from './store/store';
+import data from './data';
+import types from './store/types';
 
 import {
   h,
@@ -21,17 +21,14 @@ const app = new PIXI.Application({
 window.app = app;
 document.body.appendChild(app.view);
 
-window._ = _;
-
-const socket = io();
-
-const store = createStore(socket, {
-  browser: true,
-});
+data.dispatchToServer({
+  type: types.START_TURN,
+  to: true,
+})
 
 load(() => {
 
-  const index = h(Main);
+  const index = (<Main />);
 
   window.indexInst = renderTo(index, app.stage);
 });

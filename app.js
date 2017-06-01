@@ -8,8 +8,8 @@ const Gwent = require('gwent.js');
 const MemoryFS = require('memory-fs');
 const mfs = new MemoryFS();
 
-const createStore = require('./web/store/store.js');
-const types = require('./web/store/types.js');
+const createStore = require('./web2/store/store.js');
+const types = require('./web2/store/types.js');
 const webpackConfig = require('./webpack.config');
 const compiler = webpack(webpackConfig);
 

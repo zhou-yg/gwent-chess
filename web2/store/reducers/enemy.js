@@ -86,7 +86,6 @@ const reducer = {
     if(a.isSelf){
       const who = a.who;
       return state.filter((item, i) => {
-        console.log('敌人的',i,':',item,who);
         return !(item.x === who.x && item.y === who.y);
       });
     }

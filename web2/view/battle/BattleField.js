@@ -10,6 +10,8 @@ import {
 
 import loader from '../../loader';
 
+import data from '../../data';
+
 const MAX_W = 640;
 const CELL_W = 6;
 const CELL_H = CELL_W;
@@ -39,6 +41,10 @@ class CellManager {
 
   getCell(x, y){
     return _.cloneDeep(this.indexes[x + y * this.H]);
+  }
+
+  add(chess){
+
   }
 }
 
@@ -73,6 +79,7 @@ class CellSprite extends PactComponent {
 
     const color = i%2 ===0 ? 0xffffff : 0xeeeeee;
 
+
     return (
       <c member={topMember}>
         <rect color={color} w={w} h={w} />
@@ -90,6 +97,16 @@ export default class BattleField extends PactComponent {
     this.state = {
       cellManager: new CellManager(),
     };
+  }
+
+  didMounted(){
+    console.log(`BattleField Mounted`);
+
+    data.watch({
+      turnState(v){
+        console.log('turnState:', v);
+      }
+    })
   }
 
   render(){
