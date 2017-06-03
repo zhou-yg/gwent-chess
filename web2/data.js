@@ -22,7 +22,7 @@ class Data {
   }
 
   watch(register){
-    watch(this.store,register);
+    return watch(this.store,register);
   }
 
   dispatchToServer(action) {

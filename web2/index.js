@@ -7,6 +7,8 @@ import * as _ from 'lodash';
 import data from './data';
 import types from './store/types';
 
+import Horse from './character/chess/Horse';
+
 import {
   h,
   renderTo,
@@ -24,7 +26,15 @@ document.body.appendChild(app.view);
 data.dispatchToServer({
   type: types.START_TURN,
   to: true,
-})
+});
+
+data.dispatchToServer({
+  type: types.CHESS_ADD,
+  chess: new Horse({
+    x: 0,
+    y: 5,
+  }),
+});
 
 load(() => {
 

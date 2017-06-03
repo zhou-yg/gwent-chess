@@ -11,6 +11,7 @@ import {
 import loader from '../../loader';
 
 import data from '../../data';
+import Chess from './Chess';
 
 const MAX_W = 640;
 const CELL_W = 6;
@@ -26,6 +27,12 @@ class Cell {
     this.block = null;
     this.position = {x,y};
     this.inffect = null;
+  }
+
+  addChess(chess){
+    if(chess){
+      this.chess = chess;
+    }
   }
 }
 
@@ -43,9 +50,6 @@ class CellManager {
     return _.cloneDeep(this.indexes[x + y * this.H]);
   }
 
-  add(chess){
-
-  }
 }
 
 class CellSprite extends PactComponent {
@@ -76,14 +80,18 @@ class CellSprite extends PactComponent {
         );
       });
     }
+    var chess = '';
+    if(cell.chess){
+      chess = (<Chess chess={cell.chess} />);
+    }
 
     const color = i%2 ===0 ? 0xffffff : 0xeeeeee;
-
 
     return (
       <c member={topMember}>
         <rect color={color} w={w} h={w} />
         {decorates}
+        {chess}
       </c>
     );
   }
@@ -94,23 +102,45 @@ export default class BattleField extends PactComponent {
   constructor (props){
     super(props);
 
+    const state = data.getState();
+
     this.state = {
       cellManager: new CellManager(),
+      player: state.player,
+      enemy: state.enemy,
     };
   }
 
   didMounted(){
-    console.log(`BattleField Mounted`);
-
-    data.watch({
+    this.unWatch = data.watch({
+      enemy: (v) => {
+        this.setState({
+          enemy: v,
+        });
+      },
+      player: (v) => {
+        this.setState({
+          player: v,
+        });
+      },
       turnState(v){
-        console.log('turnState:', v);
       }
-    })
+    });
+  }
+
+  unmount(){
+    this.unWatch();
   }
 
   render(){
-    const {cellManager} = this.state;
+    const {cellManager, enemy, player} = this.state;
+
+    const [enemyIndexes, playerIndexes] = [enemy, player].map(arr => {
+      return arr.map(({x,y}) => {
+        return `${x},${y}`;
+      });
+    });
+
     return (
       <c>
       {cellManager.indexes.map((cell, i) => {
@@ -118,7 +148,21 @@ export default class BattleField extends PactComponent {
         const member = {
           x: cell.position.x * CELL_WIDTH,
           y: cell.position.y * CELL_WIDTH,
+        };
+        const xy = `${cell.position.x},${cell.position.y}`;
+
+        var index = enemyIndexes.indexOf(xy);
+        var chess = enemy[index];
+
+        if(index === -1){
+          index = playerIndexes.indexOf(xy);
+          chess = player[index];
         }
+
+        if(chess){
+          cell.addChess(chess);
+        }
+
         return (
           <CellSprite i={i + parseInt(i/CELL_W)} key={k} cell={cell} topMember={member} />
         );

@@ -6,6 +6,8 @@ const resources = [
   'grass1.png',
   'grass2.png',
   'grass3.png',
+  'block0.png',
+  'block1.png',
 ];
 
 const myLoader = new PIXI.loaders.Loader();
